@@ -94,7 +94,7 @@ function App() {
           disabled={loading || !imageFile}
           className="btn"
         >
-          {loading ? "⏳ Analyse en cours..." : "🔍 Analyser l'image"}
+          {loading ? "⏳ Analyse en cours...." : "🔍 Analyser l'image"}
         </button>
 
         {error && <div className="error">{error}</div>}
