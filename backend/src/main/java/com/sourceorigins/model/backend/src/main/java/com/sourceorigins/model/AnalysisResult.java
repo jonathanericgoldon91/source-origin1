@@ -27,4 +27,21 @@ public class AnalysisResult {
 
     /** Nombre total d'occurrences trouvées */
     private int totalFound;
+
+    /**
+     * Retourne la meilleure occurrence (la première de la liste)
+     */
+    public Occurrence getBestOccurrence() {
+        if (occurrences == null || occurrences.isEmpty()) {
+            return null;
+        }
+        return occurrences.get(0);
+    }
+
+    /**
+     * Vérifie si l'analyse a trouvé des résultats
+     */
+    public boolean hasResults() {
+        return totalFound > 0;
+    }
 }
