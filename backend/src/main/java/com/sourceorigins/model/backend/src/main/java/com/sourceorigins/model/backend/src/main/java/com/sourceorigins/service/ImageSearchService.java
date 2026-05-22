@@ -18,12 +18,18 @@ public class ImageSearchService {
     @Value("${serpapi.key}")
     private String apiKey;
 
+    /** Nombre maximum de résultats à retourner */
+    private static final int MAX_RESULTS = 10;
+
     /**
      * Analyse une image à partir de son URL.
      * @param imageUrl l'URL de l'image à analyser
      * @return un AnalysisResult contenant toutes les occurrences trouvées
      */
     public AnalysisResult analyze(String imageUrl) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return new AnalysisResult(new ArrayList<>(), 0.0, "", "", 0);
+        }
         String apiUrl = "https://serpapi.com/search.json"
                 + "?engine=google_reverse_image"
                 + "&image_url=" + imageUrl
@@ -42,6 +48,7 @@ public class ImageSearchService {
 
     /**
      * Extrait les occurrences depuis la réponse brute de l'API.
+     * Limite les résultats à MAX_RESULTS occurrences.
      * @param response la réponse JSON de SerpAPI
      * @return la liste des occurrences trouvées
      */
@@ -51,6 +58,7 @@ public class ImageSearchService {
         List<Map> results = (List<Map>) response.get("image_results");
         if (results == null) return list;
         for (Map r : results) {
+            if (list.size() >= MAX_RESULTS) break;
             Occurrence o = new Occurrence();
             o.setUrl(String.valueOf(r.getOrDefault("link", "")));
             o.setTitle(String.valueOf(r.getOrDefault("title", "Sans titre")));
