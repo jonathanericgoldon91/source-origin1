@@ -61,7 +61,7 @@ body { font-family: Arial, sans-serif; background: #f0f4f8; }
 .error {
   background: #fde8e8;
   color: #c0392b;
-  padding: 12px;
+  padding: 11px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
@@ -84,7 +84,7 @@ body { font-family: Arial, sans-serif; background: #f0f4f8; }
   background: white;
   border-left: 4px solid #1F4E79;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 9px;
   margin-bottom: 20px;
 }
 .first-occurrence a { color: #1F4E79; font-weight: bold; }
