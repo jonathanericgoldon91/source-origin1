@@ -3,59 +3,163 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreview(URL.createObjectURL(file));
+      setResult(null);
+      setError("");
+    }
+  };
+
   const analyze = async () => {
-    if (!imageUrl.trim()) { setError("Entrez une URL."); return; }
-    setLoading(true); setError(""); setResult(null);
+    if (!imageFile) {
+      setError("Veuillez sélectionner une image.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setResult(null);
+
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/analyze?url=${encodeURIComponent(imageUrl)}`
+        "http://localhost:8080/api/analyze",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       setResult(res.data);
-    } catch (e) { setError("Erreur lors de l'analyse."); }
+    } catch (e) {
+      setError("Erreur lors de l'analyse. Vérifiez le serveur.");
+    }
     setLoading(false);
   };
 
-  const getColor = (s) => s>=80?"#27ae60":s>=60?"#f39c12":s>=40?"#e67e22":"#e74c3c";
-  const getLabel = (s) => s>=80?"Très fiable":s>=60?"Probable":s>=40?"Incertaine":"Non déterminée";
+  const getColor = (s) =>
+    s >= 80 ? "#27ae60" : s >= 60 ? "#f39c12" : s >= 40 ? "#e67e22" : "#e74c3c";
+
+  const getLabel = (s) =>
+    s >= 80 ? "Origine très fiable" :
+    s >= 60 ? "Origine probable" :
+    s >= 40 ? "Origine incertaine" : "Origine non déterminée";
 
   return (
     <div className="app">
       <header className="header">
-        <h1>Source Origin</h1>
-        <p>Remontez la chaine de publication d'une image</p>
+        <h1>🔍 Source Origin</h1>
+        <p>Remontez la chaîne de publication d'une image</p>
       </header>
+
       <main className="main">
-        <div className="search-box">
-          <input type="text" placeholder="URL d'une image..."
-            value={imageUrl} onChange={(e) => setImageUrl(e.target.value)}
-            className="input" />
-          <button onClick={analyze} disabled={loading} className="btn">
-            {loading ? "Analyse..." : "Analyser"}
-          </button>
+
+        {/* Zone upload image */}
+        <div className="upload-box">
+          <label className="upload-label" htmlFor="imageInput">
+            {preview ? (
+              <img src={preview} alt="preview" className="preview-img" />
+            ) : (
+              <div className="upload-placeholder">
+                <span>📁</span>
+                <p>Cliquez pour choisir une image</p>
+                <small>JPEG, PNG, WebP — max 10MB</small>
+              </div>
+            )}
+          </label>
+          <input
+            id="imageInput"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            style={{ display: "none" }}
+          />
         </div>
+
+        {imageFile && (
+          <div className="file-info">
+            📎 {imageFile.name} ({(imageFile.size / 1024).toFixed(0)} Ko)
+          </div>
+        )}
+
+        <button
+          onClick={analyze}
+          disabled={loading || !imageFile}
+          className="btn"
+        >
+          {loading ? "⏳ Analyse en cours..." : "🔍 Analyser l'image"}
+        </button>
+
         {error && <div className="error">{error}</div>}
+
         {result && (
           <div className="results">
-            <div className="score-card" style={{borderColor: getColor(result.confidenceScore)}}>
-              <div className="score-number" style={{color: getColor(result.confidenceScore)}}>
+
+            {/* Score de confiance */}
+            <div
+              className="score-card"
+              style={{ borderColor: getColor(result.confidenceScore) }}
+            >
+              <div
+                className="score-number"
+                style={{ color: getColor(result.confidenceScore) }}
+              >
                 {result.confidenceScore.toFixed(0)}%
               </div>
-              <div>{getLabel(result.confidenceScore)}</div>
-              <div>{result.totalFound} occurrence(s) trouvée(s)</div>
-            </div>
-            <h3>Toutes les occurrences</h3>
-            {result.occurrences.map((occ, i) => (
-              <div key={i} className="occurrence-card">
-                <strong>#{i+1} {occ.title}</strong>
-                <p>{occ.source} — {occ.date}</p>
-                <a href={occ.url} target="_blank" rel="noreferrer">Voir</a>
+              <div className="score-label">
+                {getLabel(result.confidenceScore)}
               </div>
-            ))}
+              <div className="score-info">
+                {result.totalFound} occurrence(s) trouvée(s) sur le web
+              </div>
+            </div>
+
+            {/* Première occurrence */}
+            {result.firstOccurrenceUrl && (
+              <div className="first-occurrence">
+                <h3>🥇 Première occurrence détectée</h3>
+                <p><strong>Source :</strong> {result.firstOccurrenceSource}</p>
+                <a
+                  href={result.firstOccurrenceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Voir la source originale →
+                </a>
+              </div>
+            )}
+
+            {/* Timeline des occurrences */}
+<h3>📅 Chaîne de publication</h3>
+            <div className="timeline">
+              {result.occurrences.map((occ, i) => (
+                <div key={i} className="timeline-item">
+                  <div className="timeline-dot">
+                    {i === 0 ? "🥇" : `#${i + 1}`}
+                  </div>
+                  <div className="timeline-content">
+                    <strong>{occ.title}</strong>
+                    <span className="timeline-source">{occ.source}</span>
+                    <span className="timeline-date">📅 {occ.date}</span>
+                    <a
+                      href={occ.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Voir →
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+
           </div>
         )}
       </main>
