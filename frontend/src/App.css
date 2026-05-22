@@ -115,6 +115,6 @@ body { font-family: Arial, sans-serif; background: #f0f4f8; }
   flex-direction: column;
   gap: 4px;
 }
-.timeline-source { color: #555; font-size: 13px; }
+.timeline-source { color: #5555; font-size: 13px; }
 .timeline-date { color: #999; font-size: 12px; }
 .timeline-content a { color: #2E86C1; font-size: 13px; }
