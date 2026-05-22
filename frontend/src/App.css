@@ -18,7 +18,7 @@ body { font-family: Arial, sans-serif; background: #f0f4f8; }
 /* Upload */
 .upload-box {
   border: 2px dashed #1F4E79;
-  border-radius: 12px;
+  border-radius: 13px;
   margin-bottom: 16px;
   cursor: pointer;
   overflow: hidden;
