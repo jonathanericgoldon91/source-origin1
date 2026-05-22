@@ -3,6 +3,9 @@ package com.sourceorigins.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+/**
+ * Représente une occurrence (apparition) d'une image sur le web.
+ */
 
 @Data
 @AllArgsConstructor
