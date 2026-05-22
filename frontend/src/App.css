@@ -1,1 +1,120 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f0f4f8; }
 
+.header {
+  background: #1F4E79;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+.header h1 { font-size: 2rem; margin-bottom: 8px; }
+
+.main {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* Upload */
+.upload-box {
+  border: 2px dashed #1F4E79;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.upload-label { display: block; cursor: pointer; }
+.upload-placeholder {
+  padding: 40px;
+  text-align: center;
+  color: #555;
+}
+.upload-placeholder span { font-size: 3rem; }
+.upload-placeholder p { margin: 10px 0 4px; font-size: 16px; }
+.upload-placeholder small { color: #999; }
+.preview-img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.file-info {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.btn {
+  width: 100%;
+  padding: 16px;
+  background: #1F4E79;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.btn:hover:not(:disabled) { background: #2E86C1; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.error {
+  background: #fde8e8;
+  color: #c0392b;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Score */
+.score-card {
+  background: white;
+  border: 3px solid;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.score-number { font-size: 4rem; font-weight: bold; }
+.score-label { font-size: 1.2rem; margin: 8px 0; }
+.score-info { color: #777; }
+
+/* Première occurrence */
+.first-occurrence {
+  background: white;
+  border-left: 4px solid #1F4E79;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.first-occurrence a { color: #1F4E79; font-weight: bold; }
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+.timeline-item {
+  display: flex;
+  gap: 14px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.timeline-dot {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.timeline-source { color: #555; font-size: 13px; }
+.timeline-date { color: #999; font-size: 12px; }
+.timeline-content a { color: #2E86C1; font-size: 13px; }
