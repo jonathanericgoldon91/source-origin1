@@ -30,6 +30,16 @@ public class ScoreService {
             .map(o -> extractDomain(o.getUrl()))
             .distinct().count();
         double domainScore = Math.min(uniqueDomains * 4.0, 20.0);
+        // Critère 5 : bonus sources de presse reconnues (bonus 10%)
+        List<String> trustedSources = Arrays.asList(
+            "bbc.com", "cnn.com", "reuters.com", 
+            "lemonde.fr", "rfi.fr", "apnews.com"
+        );
+        long trustedCount = occurrences.stream()
+            .map(o -> extractDomain(o.getUrl()))
+            .filter(trustedSources::contains)
+            .count();
+        double bonusScore = Math.min(trustedCount * 5.0, 10.0);
 
         return Math.min(sourceScore + knownScore + dateScore + domainScore, 100.0);
     }
