@@ -26,4 +26,11 @@ public class Occurrence {
 
     /** URL de la miniature de l'image */
     private String thumbnailUrl;
+
+    /**
+     * Vérifie que l'occurrence est valide (URL non vide)
+     */
+    public boolean isValid() {
+        return url != null && !url.isEmpty();
+    }
 }
